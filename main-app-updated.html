@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore di Idee Casuali</title>
+    <meta name="description" content="Genera idee creative casuali per progetti, attività, ricette, viaggi e fitness. Combina categorie per ispirazione unica!">
+    <meta name="keywords" content="generatore idee, creatività, ispirazione, attività casuali">
+    <meta name="author" content="Generatore Idee">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Generatore di Idee Casuali">
+    <meta property="og:description" content="Genera idee creative casuali per progetti, attività, ricette, viaggi e fitness">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tuonome.github.io/generatore-idee-casuali">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide React Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Stili per dispositivi mobili */
+        @media (max-width: 640px) {
+            .text-responsive {
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen" style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #ec4899 100%);">
+    <canvas id="downloadCanvas" style="display: none;"></canvas>
+    
+    <div id="app" class="min-h-screen">
+        <!-- Header -->
+        <header class="flex justify-between items-center p-4 pt-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                💡 Idee Casuali
+            </h1>
+            <button id="settingsBtn" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all">
+                <i data-lucide="settings" class="w-6 h-6"></i>
+            </button>
+        </header>
+
+        <!-- Settings Panel -->
+        <div id="settingsPanel" class="hidden mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white slide-in">
+            <h3 class="font-bold mb-3 text-lg">⚙️ Impostazioni</h3>
+            
+            <!-- Categories -->
+            <div class="mb-4">
+                <label class="block text-sm mb-2 font-medium">🎯 Categorie:</label>
+                <div id="categoryCheckboxes" class="grid grid-cols-2 gap-2">
+                    <!-- Dinamically populated -->
+                </div>
+            </div>
+
+            <!-- Weirdness Level -->
+            <div class="mb-4">
+                <label class="block text-sm mb-2 font-medium">
+                    🎪 Livello Stranezza: <span id="weirdnessLabel">Normale</span>
+                </label>
+                <input id="weirdnessSlider" type="range" min="1" max="3" value="1" 
+                       class="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <!-- Stats -->
+            <div class="text-xs text-white/70 border-t border-white/20 pt-3">
+                <p>📊 Database: <span id="totalIdeas">0</span> idee totali</p>
+                <p>🔄 Versione: 1.0</p>
+            </div>
+        </div>
+
+        <!-- Main Idea Card -->
+        <main class="px-4 mb-6">
+            <div id="ideaCard" class="relative p-6 md:p-8 rounded-3xl card-shadow transform transition-all duration-500 gradient-bg">
+                <div id="categoryBadge" class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/20 text-white text-sm font-medium hidden">
+                </div>
+                
+                <div class="text-center">
+                    <div id="loadingState" class="flex flex-col items-center gap-4">
+                        <div class="animate-spin w-8 h-8 border-4 border-white/30 border-t-white rounded-full"></div>
+                        <p class="text-white/80">Combinando idee creative...</p>
+                    </div>
+                    
+                    <div id="ideaContent" class="hidden">
+                        <p id="ideaText" class="text-white text-responsive md:text-xl font-medium leading-relaxed mb-4">
+                        </p>
+                        
+                        <div class="flex justify-center gap-3 mt-6">
+                            <button id="favoriteBtn" class="p-3 rounded-full transition-all bg-white/20 text-white hover:bg-white/30">
+                                <i data-lucide="heart" class="w-5 h-5"></i>
+                            </button>
+                            
+                            <button id="downloadBtn" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all">
+                                <i data-lucide="download" class="w-5 h-5"></i>
+                            </button>
+                            
+                            <button id="shareBtn" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all">
+                                <i data-lucide="share-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Generate Button -->
+        <section class="px-4 mb-6">
+            <button id="generateBtn" class="w-full py-4 bg-white text-gray-800 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3">
+                <i data-lucide="shuffle" class="w-6 h-6"></i>
+                Genera Nuova Idea
+            </button>
+        </section>
+
+        <!-- Stats -->
+        <section class="px-4 mb-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                    <div id="favoritesCount" class="text-2xl font-bold text-white">0</div>
+                    <div class="text-white/70 text-sm">❤️ Preferiti</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                    <div id="historyCount" class="text-2xl font-bold text-white">0</div>
+                    <div class="text-white/70 text-sm">📝 Idee Generate</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="px-4 pb-8">
+            <div id="quickActions" class="grid grid-cols-3 gap-3">
+                <!-- Dinamically populated -->
+            </div>
+        </section>
+    </div>
+
+    <script type="module">
+        // Import database (questo sarà sostituito con un import dal file separato)
+        const categories = {
+            creativo: {
+                name: 'Creativo',
+                gradient: 'from-red-400 to-pink-500',
+                color: '#FF6B6B',
+                ideas: [
+                    'Dipingi con i colori che rappresentano il tuo umore oggi',
+                    'Scrivi una storia di 100 parole su un oggetto casuale',
+                    'Crea un collage usando materiali naturali',
+                    'Fotografa 15 texture diverse nella tua casa',
+                    'Disegna il tuo cibo preferito nello stile di Van Gogh',
+                    'Inventa una canzone rap su ieri',
+                    'Crea sculture con oggetti dalla scrivania',
+                    'Scrivi una poesia che inizia con "Se fossi un colore..."',
+                    'Ridisegna un logo famoso in stile medievale',
+                    'Crea un fumetto di 6 vignette sulla tua mattina',
+                    'Costruisci architetture fantastiche con i Lego',
+                    'Scatta foto solo di riflessi per 30 minuti',
+                    'Inventa un nuovo tipo di pasta e disegnala',
+                    'Crea pattern con le tue impronte digitali',
+                    'Scrivi un dialogo tra due elettrodomestici',
+                    'Dipingi usando solo le dita, mai pennelli',
+                    'Crea un autoritratto fatto di emoji',
+                    'Inventa una danza per il lunedì mattina',
+                    'Costruisci un castello con libri e oggetti',
+                    'Scrivi la recensione poetica del tuo ultimo sogno',
+                    'Crea arte digitale con forme geometriche',
+                    'Inventa 10 nomi per colori inesistenti',
+                    'Fai un ritratto usando solo parole',
+                    'Crea un mandala con oggetti colorati',
+                    'Scrivi la biografia di un oggetto inanimato'
+                ],
+                weirdIdeas: [
+                    'Dipingi usando solo condimenti da cucina',
+                    'Scrivi una lettera d\'amore a Marte',
+                    'Crea arte con oggetti scaduti del frigo',
+                    'Fotografa conversazioni tra ombre',
+                    'Inventa un linguaggio di rumori domestici'
+                ]
+            },
+            business: {
+                name: 'Business',
+                gradient: 'from-teal-400 to-cyan-500',
+                color: '#4ECDC4',
+                ideas: [
+                    'App per scambiare competenze tra vicini',
+                    'Servizio di consegna per anziani soli',
+                    'Marketplace per affittare spazi per eventi',
+                    'Platform per micro-investimenti artistici',
+                    'App per sessioni di studio condivise',
+                    'Personal shopper per prodotti sostenibili',
+                    'Subscription box di hobby vintage',
+                    'App per car pooling a concerti',
+                    'Dog-walking con livestream',
+                    'Platform gamificata per scambio libri',
+                    'App per compagni di viaggio last-minute',
+                    'Meal prep basato su esami medici',
+                    'Marketplace per vendere tempo e competenze',
+                    'App per raccolta differenziata gamificata',
+                    'Coaching per procrastinatori cronici',
+                    'Rental attrezzature tra creativi',
+                    'App per condividere orti urbani',
+                    'Servizio foto-famiglia in podcast',
+                    'Marketplace per scambiare esperienze',
+                    'Gruppi di acquisto artigianale',
+                    'Pulizie ecologiche auto-prodotte',
+                    'Cene multiculturali tra sconosciuti',
+                    'App che analizza umore e suggerisce attività',
+                    'Tutoraggio peer-to-peer digitale',
+                    'Rental abbigliamento per eventi speciali'
+                ],
+                weirdIdeas: [
+                    'Rental animali virtuali in AR',
+                    'Interpretazione professionale dei sogni',
+                    'Marketplace per ricordi d\'infanzia',
+                    'Speed dating tra piante'
+                ]
+            },
+            attivita: {
+                name: 'Attività',
+                gradient: 'from-blue-400 to-indigo-500',
+                color: '#45B7D1',
+                ideas: [
+                    'Caccia al tesoro fotografica nel quartiere',
+                    'Impara un piatto della nonna',
+                    'Crea un giardino di erbe sul davanzale',
+                    'Karaoke virtuale con amici lontani',
+                    'Visita un mercato etnico mai esplorato',
+                    'Impara 20 parole in linguaggio dei segni',
+                    'Costruisci un forte di cuscini',
+                    'Camminata fotografica architettonica',
+                    'Torneo di giochi da tavolo con premi fatti in casa',
+                    'Origami avanzati con YouTube',
+                    'Playlist che racconta la tua vita',
+                    'Degustazione professionale di tè/caffè',
+                    'Volontariato per un pomeriggio',
+                    'Impara una canzone con strumento nuovo',
+                    'Cinema a tema con costumi d\'epoca',
+                    'Time-lapse della giornata ogni 30 minuti',
+                    'Tour in bici di tutti i parchi cittadini',
+                    'Pane integrale da zero',
+                    'Picnic notturno per le stelle',
+                    'Lettere cartacee a persone care',
+                    'Meditazione avanzata quotidiana',
+                    'Mini-documentario famiglia 10 minuti',
+                    'Disegno dal vero con modelli',
+                    'Basi conversazionali lingua nuova',
+                    'Maratona documentari tematici'
+                ],
+                weirdIdeas: [
+                    'Comunica solo con disegni tutto il giorno',
+                    'Cammina con scarpe di misure diverse',
+                    'Mangia con utensili sbagliati',
+                    'Film muti inventando dialoghi'
+                ]
+            },
+            ricette: {
+                name: 'Ricette',
+                gradient: 'from

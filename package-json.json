@@ -1,0 +1,30 @@
+{
+  "name": "generatore-idee-casuali",
+  "version": "1.0.0",
+  "description": "Generatore di idee creative casuali per progetti, attività, ricette, viaggi e fitness",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "deploy": "gh-pages -d ."
+  },
+  "keywords": [
+    "generatore",
+    "idee",
+    "creatività",
+    "ispirazione",
+    "attività",
+    "ricette",
+    "viaggi",
+    "fitness"
+  ],
+  "author": "Il Tuo Nome",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuonome/generatore-idee-casuali.git"
+  },
+  "homepage": "https://tuonome.github.io/generatore-idee-casuali",
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
+  }
+}

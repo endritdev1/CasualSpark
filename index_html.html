@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💡 Generatore Idee Casuali</title>
+    <meta name="description" content="Genera idee creative, ricette, attività e molto altro! Un generatore di idee casuali per ispirarti ogni giorno.">
+    <meta name="keywords" content="idee creative, generatore, creatività, ricette, attività, business, viaggi, fitness">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💡</text></svg>">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Generatore Idee">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            overscroll-behavior: none;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .card-gradient-creative { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-gradient-business { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card-gradient-attivita { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .card-gradient-ricette { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .card-gradient-viaggi { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .card-gradient-fitness { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); }
+        .card-gradient-mixed { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @media (max-width: 640px) {
+            .text-responsive { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script>
+        // Definizione delle categorie e idee
+        const categories = {
+            creativo: {
+                name: 'Creativo',
+                color: '#f093fb',
+                gradient: 'card-gradient-creative',
+                icon: '🎨',
+                ideas: [
+                    'Dipingi con i colori che rappresentano il tuo umore oggi',
+                    'Scrivi una storia di 100 parole su un oggetto che hai appena toccato',
+                    'Crea un collage usando solo materiali naturali',
+                    'Fotografa 15 texture diverse nella tua casa',
+                    'Disegna il tuo cibo preferito nello stile di Van Gogh',
+                    'Inventa una canzone rap su cosa hai fatto ieri',
+                    'Crea sculture usando solo oggetti dalla scrivania',
+                    'Scrivi una poesia che inizia con "Se fossi un colore..."',
+                    'Ridisegna il logo di un brand famoso in stile medievale',
+                    'Crea un fumetto di 4 vignette sulla tua giornata',
+                    'Costruisci qualcosa di artistico con i Lego',
+                    'Scatta foto solo di riflessi per 30 minuti',
+                    'Inventa un nuovo tipo di pasta e disegnala',
+                    'Crea pattern decorativi usando impronte digitali',
+                    'Scrivi un dialogo tra due elettrodomestici',
+                    'Dipingi usando solo le dita, mai pennelli',
+                    'Crea un autoritratto fatto di emoji',
+                    'Inventa una danza che rappresenta il lunedì mattina',
+                    'Costruisci un castello con libri e oggetti casalinghi',
+                    'Scrivi una recensione poetica del tuo ultimo sogno',
+                    'Crea arte digitale usando solo forme geometriche',
+                    'Inventa 10 nomi per colori che non esistono',
+                    'Fai un ritratto di qualcuno usando solo parole',
+                    'Crea un mandala con oggetti colorati',
+                    'Scrivi la biografia di un oggetto inanimato',
+                    'Inventa una nuova emoji e disegnala',
+                    'Crea un video stop-motion con il cibo',
+                    'Disegna la tua città ideale vista dall\'alto',
+                    'Inventa una ricetta per cucinare un\'emozione',
+                    'Crea arte usando solo ombre e luci'
+                ],
+                weirdIdeas: [
+                    'Dipingi usando solo condimenti e spezie da cucina',
+                    'Scrivi una lettera d\'amore a un pianeta del sistema solare',
+                    'Crea un\'opera d\'arte usando solo oggetti scaduti del frigo',
+                    'Fotografa la tua ombra che racconta una storia',
+                    'Inventa un linguaggio fatto solo di rumori della casa',
+                    'Crea un autoritratto usando solo cibo colorato',
+                    'Scrivi un romanzo usando solo titoli di canzoni',
+                    'Dipingi con le mani i piedi mentre cammini',
+                    'Crea musica suonando solo oggetti di plastica',
+                    'Inventa una religione dedicata ai calzini spaiati'
+                ]
+            },
+            business: {
+                name: 'Business',
+                color: '#4facfe',
+                gradient: 'card-gradient-business',
+                icon: '💼',
+                ideas: [
+                    'App per scambiare competenze culinarie tra vicini di casa',
+                    'Servizio di consegna personalizzata per anziani soli',
+                    'Marketplace per affittare spazi inutilizzati per eventi',
+                    'Platform per micro-investimenti in progetti artistici locali',
+                    'App che connette studenti per sessioni di studio condiviso',
+                    'Servizio di personal shopper per prodotti sostenibili',
+                    'Subscription box tematica sui hobbies vintage dimenticati',
+                    'App per organizzare car pooling per concerti ed eventi',
+                    'Servizio di dog-walking con livestream per proprietari',
+                    'Platform per scambio di libri con sistema di rating',
+                    'App per trovare compagni di viaggio last-minute',
+                    'Servizio di meal prep basato sui tuoi esami del sangue',
+                    'Marketplace per vendere tempo e competenze creative',
+                    'App che gamifica la raccolta differenziata nei condomini',
+                    'Servizio di coaching digitale per procrastinatori cronici',
+                    'Platform per affittare attrezzature professionali tra creativi',
+                    'App per condividere orti urbani e conoscenze di giardinaggio',
+                    'Servizio che trasforma vecchie foto di famiglia in podcast',
+                    'Marketplace per scambiare esperienze invece che oggetti',
+                    'App per creare gruppi di acquisto per prodotti artigianali',
+                    'Servizio di pulizie ecologiche con ingredienti auto-prodotti',
+                    'Platform per organizzare cene multiculturali tra sconosciuti',
+                    'App che analizza il tuo umore e suggerisce attività locali',
+                    'Servizio di tutoraggio peer-to-peer per competenze digitali',
+                    'Marketplace per affittare abbigliamento per occasioni speciali'
+                ],
+                weirdIdeas: [
+                    'Rental di animali esotici virtuali in realtà aumentata',
+                    'Servizio di interpretazione professionale dei tuoi sogni notturni',
+                    'Marketplace per vendere e comprare ricordi di infanzia',
+                    'App di speed dating tra piante d\'appartamento dei vicini',
+                    'Servizio di delivery per emozioni su misura',
+                    'App per affittare la personalità di qualcun altro per un giorno',
+                    'Marketplace per scambiare superstizioni personali',
+                    'Servizio che ti trova il tuo doppio in un\'altra città'
+                ]
+            },
+            attivita: {
+                name: 'Attività',
+                color: '#43e97b',
+                gradient: 'card-gradient-attivita',
+                icon: '⚡',
+                ideas: [
+                    'Organizza una caccia al tesoro fotografica nel tuo quartiere',
+                    'Impara a cucinare un piatto della tradizione di tua nonna',
+                    'Crea un giardino di erbe aromatiche sul davanzale',
+                    'Organizza una serata karaoke con amici via videocall',
+                    'Visita un mercato locale che non hai mai esplorato',
+                    'Impara 20 parole in linguaggio dei segni',
+                    'Costruisci un forte con cuscini e coperte in salotto',
+                    'Fai una camminata fotografando solo dettagli architettonici',
+                    'Organizza un torneo di giochi da tavola con premi assurdi',
+                    'Impara a fare origami seguendo tutorial su YouTube',
+                    'Crea una playlist che racconti la storia della tua vita',
+                    'Organizza una degustazione di tè o caffè con note di gusto',
+                    'Fai volontariato per un pomeriggio in un\'associazione locale',
+                    'Impara a suonare una canzone semplice con uno strumento',
+                    'Organizza una serata cinema a tema con amici',
+                    'Crea un time-lapse della tua giornata con foto ogni ora',
+                    'Visita tutti i parchi della tua città in bicicletta',
+                    'Impara a fare il pane partendo da zero',
+                    'Organizza un picnic notturno per osservare le stelle',
+                    'Scrivi e spedisci una lettera cartacea a qualcuno di caro',
+                    'Impara una nuova tecnica di meditazione e praticala',
+                    'Crea un documentario di 5 minuti sulla tua famiglia',
+                    'Organizza una sessione di disegno dal vero con amici',
+                    'Impara le basi di una nuova lingua con app mobile',
+                    'Fai una maratona di documentari su un argomento che ti incuriosisce',
+                    'Organizza una sessione di storytelling con storie personali',
+                    'Impara a riparare qualcosa che hai in casa da tempo',
+                    'Crea un album fotografico tematico del mese',
+                    'Organizza una sfida culinaria con ingredienti casuali',
+                    'Impara a riconoscere 10 costellazioni'
+                ],
+                weirdIdeas: [
+                    'Trascorri un\'intera giornata comunicando solo attraverso disegni',
+                    'Cammina per un ora indossando scarpe di misure diverse',
+                    'Mangia ogni pasto con utensili sbagliati per una giornata',
+                    'Guarda film muti inventando tutti i dialoghi ad alta voce',
+                    'Indossa tutti i tuoi vestiti al contrario per mezza giornata',
+                    'Costruisci una tenda in salotto e dormi lì questa notte',
+                    'Parla per un\'ora usando solo domande retoriche',
+                    'Cammina per casa come se fossi su una navicella spaziale'
+                ]
+            },
+            ricette: {
+                name: 'Ricette',
+                color: '#fa709a',
+                gradient: 'card-gradient-ricette',
+                icon: '🍳',
+                ideas: [
+                    'Ramen fatto in casa con brodo vegetale e uova marinate',
+                    'Smoothie bowl tropicale con granola fatta in casa',
+                    'Tacos di pesce con salsa di mango e avocado',
+                    'Risotto al vino rosso con gorgonzola e noci',
+                    'Bowl mediterranea con falafel, hummus e verdure grigliate',
+                    'Curry di ceci con latte di cocco e spinaci freschi',
+                    'Pancakes proteici ai frutti di bosco e yogurt greco',
+                    'Zuppa asiatica piccante con tofu e funghi shiitake',
+                    'Insalata di quinoa con melograno, feta e menta',
+                    'Pasta con pesto di basilico fatto in casa e pomodorini',
+                    'Burger vegetale di barbabietola con maionese alle erbe',
+                    'Stir fry di verdure con salsa teriyaki e sesamo',
+                    'Focaccia integrale con rosmarino e olive taggiasche',
+                    'Cheesecake ai frutti di bosco senza cottura',
+                    'Gazpacho andaluso con crostini di pane tostato',
+                    'Polpette di lenticchie in salsa di pomodoro',
+                    'Salmone grigliato con quinoa e verdure di stagione',
+                    'Tiramisu vegano con mascarpone di anacardi',
+                    'Zuppa di zucca arrosto con zenzero e latte di cocco',
+                    'Wrap integrale con hummus, verdure crude e germogli',
+                    'Muffins salati con zucchine, pomodori secchi e feta',
+                    'Paella vegetariana con carciofi e peperoni',
+                    'Brownies al cioccolato fondente e noci pecan',
+                    'Insalata di farro con verdure grigliate e mozzarella',
+                    'Smoothie verde energizzante con spinaci e ananas'
+                ],
+                weirdIdeas: [
+                    'Pizza dolce con nutella, fragole e marshmallow grigliati',
+                    'Gelato salato al parmigiano con miele di acacia',
+                    'Sushi dessert con mango, cocco e cioccolato bianco',
+                    'Hamburger di gelato con biscotti come pane',
+                    'Pasta colorata naturalmente con barbabietola e spinaci',
+                    'Cocktail analcolico che cambia colore mentre lo bevi',
+                    'Torta salata che sembra un dolce ma è piccante',
+                    'Zuppa fredda di frutta che sa di minestrone'
+                ]
+            },
+            viaggi: {
+                name: 'Viaggi',
+                color: '#a8edea',
+                gradient: 'card-gradient-viaggi',
+                icon: '✈️',
+                ideas: [
+                    'Weekend in una casa galleggiante in un lago naturale',
+                    'Tour enogastronomico in bicicletta tra le colline',
+                    'Notte in un osservatorio astronomico per guardare le stelle',
+                    'Viaggio in treno attraverso paesaggi montani innevati',
+                    'Esperienza in una fattoria biologica con laboratori culinari',
+                    'Road trip fotografico lungo antiche strade romane',
+                    'Weekend in un borgo medievale con corso di ceramica',
+                    'Escursione guidata in grotte sotterranee illuminate',
+                    'Viaggio culinario tra i mercati storici delle città d\'arte',
+                    'Settimana in un monastero per un ritiro spirituale',
+                    'Tour dei castelli abbandonati con guide storiche',
+                    'Esperienza glamping in una riserva naturale',
+                    'Crociera fluviale con soste in città d\'arte nascoste',
+                    'Weekend in una casa sull\'albero in mezzo al bosco',
+                    'Tour dei luoghi di produzione di vini naturali',
+                    'Viaggio seguendo le orme di un artista famoso',
+                    'Esperienza in un villaggio di pescatori tradizionale',
+                    'Tour notturno delle città fantasma italiane',
+                    'Weekend termale con trattamenti naturali locali',
+                    'Viaggio in veliero tra isole del Mediterraneo',
+                    'Esperienza agricola con raccolta e trasformazione prodotti',
+                    'Tour dei luoghi cinematografici più suggestivi',
+                    'Weekend in una yurta mongola nelle montagne',
+                    'Viaggio gastronomico nei luoghi della tradizione culinaria',
+                    'Esperienza di survival dolce in natura con guide'
+                ],
+                weirdIdeas: [
+                    'Viaggio dove puoi spostarti solo con mezzi di trasporto gialli',
+                    'Tour di luoghi il cui nome contiene esattamente 7 lettere',
+                    'Esperienza di viaggio dove parli solo in rima per tutto il tempo',
+                    'Vacanza dove mangi solo cibi che iniziano con la prima lettera del tuo nome',
+                    'Viaggio dove dormi ogni notte in un tipo diverso di alloggio',
+                    'Tour seguendo solo le indicazioni di sconosciuti incontrati per strada',
+                    'Esperienza dove visiti solo posti che hai sognato la notte prima'
+                ]
+            },
+            fitness: {
+                name: 'Fitness',
+                color: '#d299c2',
+                gradient: 'card-gradient-fitness',
+                icon: '💪',
+                ideas: [
+                    'Challenge di 30 giorni: 100 flessioni distribuite nella giornata',
+                    'Allenamento funzionale usando solo il peso corporeo',
+                    'Yoga flow mattutino di 20 minuti per iniziare la giornata',
+                    'Circuit training alternando cardio e resistenza per 45 minuti',
+                    'Camminata veloce intervallata da esercizi nei parchi pubblici',
+                    'Sessione di stretching profondo mentre ascolti un audiolibro',
+                    'Allenamento HIIT di 15 minuti con musica energizzante',
+                    'Pilates per core stability e flessibilità della schiena',
+                    'Danza fitness seguendo tutorial online per un\'ora',
+                    'Corsa intervallata con sprint di 30 secondi ogni 5 minuti',
+                    'Allenamento con elastici di resistenza per tutto il corpo',
+                    'Sessione di tai chi nel giardino al tramonto',
+                    'Workout aqua fitness se hai accesso a una piscina',
+                    'Calisthenics: impara a fare muscle-up progressivamente',
+                    'Allenamento pliometrico per esplosività e coordinazione',
+                    'Sessione di meditation walking in natura per 40 minuti',
+                    'Crosstraining combinando corsa, nuoto e bicicletta',
+                    'Workout funzionale usando oggetti domestici come pesi',
+                    'Pratica di equilibrio e propriocezione su superfici instabili',
+                    'Sessione di kickboxing shadowboxing con musica ritmica',
+                    'Allenamento intervallato su scale pubbliche o gradini',
+                    'Flow di movimenti naturali ispirati agli animali',
+                    'Sessione di forza usando bande elastiche e TRX',
+                    'Workout dancing che unisce cardio e divertimento',
+                    'Pratica di respirazione profonda combinata a stretching dolce'
+                ],
+                weirdIdeas: [
+                    'Allenati indossando solo vestiti del tuo colore preferito',
+                    'Fai esercizi solo quando senti sirene o clacson per strada',
+                    'Workout dove ogni esercizio deve essere fatto ridendo',
+                    'Allenati solo in luoghi dove il pavimento ha pattern geometrici',
+                    'Fai fitness ascoltando solo musica degli anni \'80',
+                    'Esercitati parlando sempre in terza persona',
+                    'Workout dove devi toccare sempre 3 oggetti diversi tra un esercizio e l\'altro'
+                ]
+            }
+        };
+
+        // Stato dell'applicazione
+        let state = {
+            currentIdea: '',
+            currentCategory: '',
+            favorites: JSON.parse(localStorage.getItem('generatore-idee-favorites') || '[]'),
+            history: JSON.parse(localStorage.getItem('generatore-idee-history') || '[]'),
+            weirdnessLevel: parseInt(localStorage.getItem('generatore-idee-weirdness') || '1'),
+            selectedCategories: JSON.parse(localStorage.getItem('generatore-idee-categories') || '["creativo"]'),
+            isGenerating: false,
+            showSettings: false,
+            showHistory: false,
+            showFavorites: false
+        };
+
+        // Funzioni utility
+        function saveToLocalStorage() {
+            localStorage.setItem('generatore-idee-favorites', JSON.stringify(state.favorites));
+            localStorage.setItem('generatore-idee-history', JSON.stringify(state.history.slice(0, 50)));
+            localStorage.setItem('generatore-idee-weirdness', state.weirdnessLevel.toString());
+            localStorage.setItem('generatore-idee-categories', JSON.stringify(state.selectedCategories));
+        }
+
+        function getCategoryDisplayName(categoryKey) {
+            if (categoryKey.includes('+')) {
+                const cats = categoryKey.split('+');
+                return cats.map(cat => categories[cat]?.name || cat).join(' + ');
+            }
+            return categories[categoryKey]?.name || categoryKey;
+        }
+
+        function getCardGradient(categoryKey) {
+            if (categoryKey.includes('+')) {
+                return 'card-gradient-mixed';
+            }
+            return categories[categoryKey]?.gradient || 'card-gradient-mixed';
+        }
+
+        function generateIdea() {
+            state.isGenerating = true;
+            render();
+            
+            setTimeout(() => {
+                const selectedCats = state.selectedCategories.length > 0 ? state.selectedCategories : ['creativo'];
+                
+                let finalIdea = '';
+                let primaryCategory = '';
+                
+                if (selectedCats.length === 1) {
+                    const category = categories[selectedCats[0]];
+                    let ideaPool = category.ideas;
+                    if (state.weirdnessLevel >= 3) {
+                        ideaPool = [...category.ideas, ...category.weirdIdeas];
+                    }
+                    finalIdea = ideaPool[Math.floor(Math.random() * ideaPool.length)];
+                    primaryCategory = selectedCats[0];
+                } else {
+                    const shouldCombine = Math.random() > 0.3;
+                    
+                    if (shouldCombine && selectedCats.length >= 2) {
+                        const shuffled = [...selectedCats].sort(() => 0.5 - Math.random());
+                        const cat1Key = shuffled[0];
+                        const cat2Key = shuffled[1];
+                        
+                        const cat1 = categories[cat1Key];
+                        const cat2 = categories[cat2Key];
+                        
+                        let pool1 = cat1.ideas;
+                        let pool2 = cat2.ideas;
+                        
+                        if (state.weirdnessLevel >= 3) {
+                            pool1 = [...cat1.ideas, ...cat1.weirdIdeas];
+                            pool2 = [...cat2.ideas, ...cat2.weirdIdeas];
+                        }
+                        
+                        const idea1 = pool1[Math.floor(Math.random() * pool1.length)];
+                        const idea2 = pool2[Math.floor(Math.random() * pool2.length)];
+                        
+                        const combinationTemplates = [
+                            `Combina ${cat1.name.toLowerCase()} e ${cat2.name.toLowerCase()}: ${idea1.split(':')[0]} + ${idea2.split(':')[0]}`,
+                            `Sfida mista: ${idea1} MA in stile ${cat2.name.toLowerCase()}`,
+                            `Fusion idea: ${idea2} incorporando elementi di ${idea1.toLowerCase()}`,
+                            `Cross-training: ${idea1} + ${idea2.replace(/^[A-Z][a-z]+ /, '').toLowerCase()}`,
+                            `Esperimento: ${idea2.split(' ').slice(0, 4).join(' ')} + ${idea1.split(' ').slice(-4).join(' ')}`
+                        ];
+                        
+                        finalIdea = combinationTemplates[Math.floor(Math.random() * combinationTemplates.length)];
+                        primaryCategory = `${cat1Key}+${cat2Key}`;
+                    } else {
+                        const randomCat = selectedCats[Math.floor(Math.random() * selectedCats.length)];
+                        const category = categories[randomCat];
+                        let ideaPool = category.ideas;
+                        if (state.weirdnessLevel >= 3) {
+                            ideaPool = [...category.ideas, ...category.weirdIdeas];
+                        }
+                        finalIdea = ideaPool[Math.floor(Math.random() * ideaPool.length)];
+                        primaryCategory = randomCat;
+                    }
+                }
+                
+                if (finalIdea === state.currentIdea) {
+                    return generateIdea();
+                }
+                
+                state.currentIdea = finalIdea;
+                state.currentCategory = primaryCategory;
+                state.history = [{ idea: finalIdea, category: primaryCategory, timestamp: new Date().toISOString() }, ...state.history.slice(0, 49)];
+                state.isGenerating = false;
+                
+                saveToLocalStorage();
+                render();
+            }, 800);
+        }
+
+        function toggleFavorite() {
+            if (!state.currentIdea) return;
+            
+            const exists = state.favorites.find(fav => fav.idea === state.currentIdea);
+            if (exists) {
+                state.favorites = state.favorites.filter(fav => fav.idea !== state.currentIdea);
+            } else {
+                state.favorites = [...state.favorites, { 
+                    idea: state.currentIdea, 
+                    category: state.currentCategory, 
+                    timestamp: new Date().toISOString() 
+                }];
+            }
+            
+            saveToLocalStorage();
+            render();
+        }
+
+        function shareIdea() {
+            if (navigator.share && state.currentIdea) {
+                navigator.share({
+                    title: 'Idea Casuale!',
+                    text: `${state.currentIdea}\n\nGenerato da Generatore Idee 💡`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback per browser che non supportano Web Share API
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(`${state.currentIdea}\n\nGenerato da Generatore Idee 💡\n${window.location.href}`);
+                    alert('Idea copiata negli appunti!');
+                }
+            }
+        }
+
+        function generateImage() {
+            if (!state.currentIdea) return;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 1080;
+            canvas.height = 1920;
+
+            let displayColor = '#667eea';
+            if (state.currentCategory.includes('+')) {
+                displayColor = '#764ba2';
+            } else if (categories[state.currentCategory]) {
+                displayColor = categories[state.currentCategory].color;
+            }
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, displayColor + '88');
+            gradient.addColorStop(1, displayColor + 'CC');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Elementi decorativi
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 100 + 20;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            
+            // Titolo
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 48px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('💡 Generatore Idee', canvas.width / 2, 200);
+            
+            // Categoria
+            ctx.font = '32px Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            const categoryDisplay = getCategoryDisplayName(state.currentCategory);
+            ctx.fillText(categoryDisplay.toUpperCase(), canvas.width / 2, 280);
+            
+            // Testo principale
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 44px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            
+            // Word wrap per testi lunghi
+            const words = state.currentIdea.split(' ');
+            const lines = [];
+            let currentLine = '';
+            const maxWidth = canvas.width - 160;
+            
+            words.forEach(word => {
+                const testLine = currentLine + word + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && currentLine !== '') {
+                    lines.push(currentLine);
+                    currentLine = word + ' ';
+                } else {
+                    currentLine = testLine;
+                }
+            });
+            lines.push(currentLine);
+            
+            const startY = (canvas.height / 2) - ((lines.length - 1) * 60 / 2);
+            lines.forEach((line, index) => {
+                ctx.fillText(line.trim(), canvas.width / 2, startY + (index * 60));
+            });
+            
+            // Footer
+            ctx.font = '24px Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            const now = new Date().toLocaleDateString('it-IT');
+            ctx.fillText(now, canvas.width / 2, canvas.height - 100);
+            
+            // Download immagine
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `idea-${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // Funzione di rendering principale
+        function render() {
+            const app = document.getElementById('app');
+            const isFavorite = state.favorites.some(fav => fav.idea === state.currentIdea);
+            
+            app.innerHTML = `
+                <div class="gradient-bg min-h-screen">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center p-4 pt-8">
+                        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                            💡 Idee Casuali
+                        </h1>
+                        <div class="flex gap-2">
+                            <button onclick="toggleHistory()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all">
+                                📚
+                            </button>
+                            <button onclick="toggleFavorites()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all">
+                                ❤️
+                            </button>
+                            <button onclick="toggleSettings()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all">
+                                ⚙️
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Settings Panel -->
+                    ${state.showSettings ? `
+                        <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white animate-pulse-slow">
+                            <h3 class="font-bold mb-3">⚙️ Impostazioni</h3>
+                            
+                            <!-- Categories -->
+                            <div class="mb-4">
+                                <label class="block text-sm mb-2">Categorie:</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    ${Object.entries(categories).map(([key, cat]) => `
+                                        <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
+                                            <input
+                                                type="checkbox"
+                                                ${state.selectedCategories.includes(key) ? 'checked' : ''}
+                                                onchange="toggleCategory('${key}')"
+                                                class="rounded"
+                                            />
+                                            ${cat.icon} ${cat.name}
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Weirdness Level -->
+                            <div>
+                                <label class="block text-sm mb-2">
+                                    Livello Stranezza: ${
+                                        state.weirdnessLevel === 1 ? '😊 Normale' : 
+                                        state.weirdnessLevel === 2 ? '🤪 Strano' : 
+                                        '🦄 Bizzarro'
+                                    }
+                                </label>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="3"
+                                    value="${state.weirdnessLevel}"
+                                    onchange="updateWeirdness(this.value)"
+                                    class="w-full"
+                                />
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- History Panel -->
+                    ${state.showHistory ? `
+                        <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto">
+                            <h3 class="font-bold mb-3">📚 Cronologia</h3>
+                            ${state.history.length === 0 ? 
+                                '<p class="text-white/70">Nessuna idea generata ancora...</p>' :
+                                state.history.slice(0, 20).map((item, index) => `
+                                    <div class="mb-3 p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition-all" onclick="selectHistoryItem(${index})">
+                                        <div class="text-sm text-white/70 mb-1">
+                                            ${getCategoryDisplayName(item.category)} • ${new Date(item.timestamp).toLocaleDateString('it-IT')}
+                                        </div>
+                                        <div class="text-sm">${item.idea}</div>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    ` : ''}
+
+                    <!-- Favorites Panel -->
+                    ${state.showFavorites ? `
+                        <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto">
+                            <h3 class="font-bold mb-3">❤️ Preferiti</h3>
+                            ${state.favorites.length === 0 ? 
+                                '<p class="text-white/70">Nessun preferito ancora...</p>' :
+                                state.favorites.map((item, index) => `
+                                    <div class="mb-3 p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition-all" onclick="selectFavoriteItem(${index})">
+                                        <div class="text-sm text-white/70 mb-1">
+                                            ${getCategoryDisplayName(item.category)} • ${new Date(item.timestamp).toLocaleDateString('it-IT')}
+                                        </div>
+                                        <div class="text-sm">${item.idea}</div>
+                                        <button onclick="event.stopPropagation(); removeFavorite(${index})" class="mt-2 text-red-300 hover:text-red-100 text-xs">
+                                            🗑️ Rimuovi
+                                        </button>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    ` : ''}
+
+                    <!-- Main Idea Card -->
+                    <div class="px-4 mb-6">
+                        <div class="${getCardGradient(state.currentCategory)} p-8 rounded-3xl shadow-2xl transform transition-all duration-500 ${
+                            state.isGenerating ? 'scale-95 opacity-50' : 'scale-100 opacity-100 bounce-in'
+                        } relative overflow-hidden">
+                            ${state.currentCategory ? `
+                                <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/20 text-white text-sm font-medium">
+                                    ${categories[state.currentCategory.split('+')[0]]?.icon || '💡'} ${getCategoryDisplayName(state.currentCategory)}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="text-center">
+                                ${state.isGenerating ? `
+                                    <div class="flex flex-col items-center gap-4">
+                                        <div class="animate-spin w-8 h-8 border-4 border-white/30 border-t-white rounded-full"></div>
+                                        <p class="text-white/80">🎲 Mescolando idee creative...</p>
+                                    </div>
+                                ` : `
+                                    <div>
+                                        <p class="text-white text-xl font-medium leading-relaxed mb-4 text-responsive">
+                                            ${state.currentIdea}
+                                        </p>
+                                        
+                                        <!-- Action buttons -->
+                                        <div class="flex justify-center gap-3 mt-6">
+                                            <button
+                                                onclick="toggleFavorite()"
+                                                class="p-3 rounded-full transition-all transform hover:scale-110 ${
+                                                    isFavorite 
+                                                        ? 'bg-red-500 text-white scale-110 animate-pulse-slow' 
+                                                        : 'bg-white/20 text-white hover:bg-white/30'
+                                                }"
+                                                title="${isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}"
+                                            >
+                                                ${isFavorite ? '❤️' : '🤍'}
+                                            </button>
+                                            
+                                            <button
+                                                onclick="generateImage()"
+                                                class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110"
+                                                title="Scarica come immagine"
+                                            >
+                                                📥
+                                            </button>
+                                            
+                                            <button
+                                                onclick="shareIdea()"
+                                                class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110"
+                                                title="Condividi idea"
+                                            >
+                                                📤
+                                            </button>
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="px-4 mb-6">
+                        <button
+                            onclick="generateIdea()"
+                            ${state.isGenerating ? 'disabled' : ''}
+                            class="w-full py-4 bg-white text-gray-800 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            ${state.isGenerating ? `
+                                <div class="animate-spin w-5 h-5 border-2 border-gray-400 border-t-gray-800 rounded-full"></div>
+                                Generando...
+                            ` : `
+                                🎲 Genera Nuova Idea
+                            `}
+                        </button>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="px-4 mb-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all cursor-pointer floating" onclick="toggleFavorites()">
+                                <div class="text-2xl font-bold text-white">${state.favorites.length}</div>
+                                <div class="text-white/70 text-sm">❤️ Preferiti</div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all cursor-pointer floating" onclick="toggleHistory()" style="animation-delay: 0.5s">
+                                <div class="text-2xl font-bold text-white">${state.history.length}</div>
+                                <div class="text-white/70 text-sm">📚 Idee Generate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="px-4 pb-8">
+                        <div class="grid grid-cols-3 gap-3">
+                            ${Object.entries(categories).slice(0, 3).map(([key, cat]) => `
+                                <button
+                                    onclick="quickGenerate('${key}')"
+                                    class="${cat.gradient} p-3 rounded-xl text-white text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                                >
+                                    ${cat.icon} ${cat.name}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="text-center text-white/60 text-xs pb-4">
+                        Made with ❤️ for creativity
+                    </div>
+                </div>
+            `;
+        }
+
+        // Event handlers
+        function toggleSettings() {
+            state.showSettings = !state.showSettings;
+            state.showHistory = false;
+            state.showFavorites = false;
+            render();
+        }
+
+        function toggleHistory() {
+            state.showHistory = !state.showHistory;
+            state.showSettings = false;
+            state.showFavorites = false;
+            render();
+        }
+
+        function toggleFavorites() {
+            state.showFavorites = !state.showFavorites;
+            state.showSettings = false;
+            state.showHistory = false;
+            render();
+        }
+
+        function toggleCategory(categoryKey) {
+            if (state.selectedCategories.includes(categoryKey)) {
+                state.selectedCategories = state.selectedCategories.filter(c => c !== categoryKey);
+            } else {
+                state.selectedCategories = [...state.selectedCategories, categoryKey];
+            }
+            
+            // Assicurati che almeno una categoria sia selezionata
+            if (state.selectedCategories.length === 0) {
+                state.selectedCategories = ['creativo'];
+            }
+            
+            saveToLocalStorage();
+            render();
+        }
+
+        function updateWeirdness(value) {
+            state.weirdnessLevel = parseInt(value);
+            saveToLocalStorage();
+            render();
+        }
+
+        function quickGenerate(categoryKey) {
+            state.selectedCategories = [categoryKey];
+            saveToLocalStorage();
+            generateIdea();
+        }
+
+        function selectHistoryItem(index) {
+            const item = state.history[index];
+            state.currentIdea = item.idea;
+            state.currentCategory = item.category;
+            state.showHistory = false;
+            render();
+        }
+
+        function selectFavoriteItem(index) {
+            const item = state.favorites[index];
+            state.currentIdea = item.idea;
+            state.currentCategory = item.category;
+            state.showFavorites = false;
+            render();
+        }
+
+        function removeFavorite(index) {
+            state.favorites = state.favorites.filter((_, i) => i !== index);
+            saveToLocalStorage();
+            render();
+        }
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
+            // Carica la prima idea
+            if (state.history.length > 0) {
+                const lastItem = state.history[0];
+                state.currentIdea = lastItem.idea;
+                state.currentCategory = lastItem.category;
+                render();
+            } else {
+                generateIdea();
+            }
+        });
+
+        // Service Worker per PWA (opzionale)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {
+                    // Service worker non disponibile, ignora
+                });
+            });
+        }
+    </script>
+</body>
+</html>

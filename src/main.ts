@@ -318,121 +318,125 @@ function render(): void {
     if (!app) return;
     const isFavorite = state.favorites.some(fav => fav.idea === state.currentIdea);
     app.innerHTML = `
-        <div class="gradient-bg min-h-screen">
-            <div class="flex justify-between items-center p-4 pt-8">
-                <h1 class="text-2xl font-bold text-white flex items-center gap-2">💡 Idee Casuali</h1>
-                <div class="flex gap-2">
-                    <!-- Pulsanti principali -->
-                    <div class="relative group">
-                        <button onclick="toggleHistory()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl cursor-pointer">📚</button>
-                        <div class="tooltip-card">
-                            Cronologia
-                        </div>
-                    </div>
-                    <div class="relative group">
-                        <button onclick="toggleFavorites()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl cursor-pointer">❤️</button>
-                        <div class="tooltip-card">
-                            Preferiti
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            ${state.showHistory ? `
-            <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto">
-                <h3 class="font-bold mb-3">📚 Cronologia</h3>${state.history.length === 0 ? '<p class="text-white/70">Nessuna idea generata ancora...</p>' : state.history.slice(0, 20).map((item, index) => `<div class="mb-3 p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition-all" onclick="selectHistoryItem(${index})"><div class="text-sm text-white/70 mb-1">${getCategoryDisplayName(item.category)} • ${new Date(item.timestamp).toLocaleDateString('it-IT')}</div><div class="text-sm">${item.idea}</div></div>`).join('')}</div>` : ''}
-            
-            ${state.showFavorites ? `<div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto"><h3 class="font-bold mb-3">❤️ Preferiti</h3>${state.favorites.length === 0 ? '<p class="text-white/70">Nessun preferito ancora...</p>' : state.favorites.map((item, index) => `<div class="mb-3 p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition-all" onclick="selectFavoriteItem(${index})"><div class="text-sm text-white/70 mb-1">${getCategoryDisplayName(item.category)} • ${new Date(item.timestamp).toLocaleDateString('it-IT')}</div><div class="text-sm">${item.idea}</div><button onclick="event.stopPropagation(); removeFavorite(${index})" class="mt-2 text-red-300 hover:text-red-100 text-xs">🗑️ Rimuovi</button></div>`).join('')}</div>` : ''}
-            
-            <div class="px-4 mb-6">
-                <div class="${getCardGradient(state.currentCategory)} p-8 rounded-3xl shadow-2xl transform transition-all duration-500 ${state.isGenerating ? 'scale-95 opacity-50' : 'scale-100 opacity-100 bounce-in'} relative overflow-hidden">
-                         ${state.currentCategory ? `<div class="absolute right-4 top-3 w-32 text-center mb-3 px-3 py-1 rounded-full bg-black/20 text-white text-sm font-medium">${categories[state.currentCategory.split('+')[0]]?.icon || '💡'} ${getCategoryDisplayName(state.currentCategory)}</div>` : ''}               
-                    <div class="text-center">${state.isGenerating ? `<div class="flex flex-col items-center gap-4"><div class="animate-spin w-8 h-8 border-4 border-white/30 border-t-white rounded-full"></div>
-                        <p class="text-white/80">🎲 Mescolando idee creative...</p>
-                        </div>` : `
-                            <div><p class="text-white text-xl font-medium leading-relaxed my-8 text-responsive">${state.currentIdea}</p>
-                                <div class="flex justify-center gap-3 mt-6">
-                                 <!-- Pulsanti azione card -->
-                                 <div class="relative group">
-                                    <button onclick="toggleFavorite()" class="p-3 rounded-full transition-all transform hover:scale-110 ${isFavorite ? 'bg-red-500 text-white scale-110 animate-pulse-slow' : 'bg-white/20 text-white hover:bg-white/30'} text-3xl" title="${isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}">${isFavorite ? '❤️' : '🤍'}</button>
-                                    <div class="tooltip-card">
-                                        ${isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
-                                    </div>
-                                </div>
-                                
-                                <div class="relative group">
-                                    <button onclick="generateImage()" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110 text-3xl" title="Scarica come immagine">📥</button>
-                                    <div class="tooltip-card">
-                                        Scarica come immagine
-                                    </div>
-                                </div>
-                                
-                                <div class="relative group">
-                                    <button onclick="shareIdea()" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110 text-3xl" title="Condividi idea">📤</button>
-                                    <div class="tooltip-card">
-                                        Condividi idea
-                                    </div>
-                                </div>
-                                
-                                </div>
+        <div class="gradient-bg min-h-screen flex flex-col">
+            <div class="mx-auto container">
+        
+                <div class="flex justify-between items-center p-4 pt-8">
+                    <h1 class="text-2xl font-bold text-white flex items-center gap-2">💡 Idee Casuali</h1>
+                    <div class="flex gap-2">
+                        <!-- Pulsanti principali -->
+                        <div class="relative group">
+                            <button onclick="toggleHistory()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl cursor-pointer">📚</button>
+                            <div class="tooltip-card">
+                                Cronologia
                             </div>
-`}
+                        </div>
+                        <div class="relative group">
+                            <button onclick="toggleFavorites()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl cursor-pointer">❤️</button>
+                            <div class="tooltip-card">
+                                Preferiti
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-                    
-            <div class="px-4 mb-6"><button onclick="generateIdea()" ${state.isGenerating ? 'disabled' : ''} class="w-full py-4 bg-white text-gray-800 rounded-2xl font-bold lg:text-2xl text-xl shadow-lg hover:shadow-xl transform hover:scale-101 cursor-pointer transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">${state.isGenerating ? `<div class="animate-spin w-5 h-5 border-2 border-gray-400 border-t-gray-800 rounded-full"></div> Generando...` : `🎲 Genera Nuova Idea`}</button></div>
-            
-            <div class="px-4 pb-8">
-                <div class="grid grid-cols-3 gap-5">${Object.entries(categories).slice(0, 3).map(([key, cat]: [string, any]) => `
-                    <button onclick="quickGenerate('${key}')" class="${cat.gradient} cursor-pointer p-3 rounded-xl text-white text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-102 transition-all"><span class="lg:text-2xl text-xl">${cat.icon} ${cat.name}</span> </button>`).join('')}
-                </div>
-            </div>
-
-            <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white">
-                <div class="mb-4">
-                    <label class="block text-md italic font-bold mb-2">Seleziona Categorie:</label>
-                    <div class="grid grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
-                            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
-                            <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-150" /><span class="lg:text-lg text:sm">${cat.icon} ${cat.name}</span></label>
-                        `).join('')}
+    
+    
+                ${state.showHistory ? `
+                <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto">
+                    <h3 class="font-bold mb-3">📚 Cronologia</h3>${state.history.length === 0 ? '<p class="text-white/70">Nessuna idea generata ancora...</p>' : state.history.slice(0, 20).map((item, index) => `<div class="mb-3 p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition-all" onclick="selectHistoryItem(${index})"><div class="text-sm text-white/70 mb-1">${getCategoryDisplayName(item.category)} • ${new Date(item.timestamp).toLocaleDateString('it-IT')}</div><div class="text-sm">${item.idea}</div></div>`).join('')}</div>` : ''}
+    
+                ${state.showFavorites ? `<div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto"><h3 class="font-bold mb-3">❤️ Preferiti</h3>${state.favorites.length === 0 ? '<p class="text-white/70">Nessun preferito ancora...</p>' : state.favorites.map((item, index) => `<div class="mb-3 p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition-all" onclick="selectFavoriteItem(${index})"><div class="text-sm text-white/70 mb-1">${getCategoryDisplayName(item.category)} • ${new Date(item.timestamp).toLocaleDateString('it-IT')}</div><div class="text-sm">${item.idea}</div><button onclick="event.stopPropagation(); removeFavorite(${index})" class="mt-2 text-red-300 hover:text-red-100 text-xs">🗑️ Rimuovi</button></div>`).join('')}</div>` : ''}
+    
+                <div class="px-4 mb-6">
+                    <div class="${getCardGradient(state.currentCategory)} p-8 rounded-3xl shadow-2xl transform transition-all duration-500 ${state.isGenerating ? 'scale-95 opacity-50' : 'scale-100 opacity-100 bounce-in'} relative overflow-hidden">
+                             ${state.currentCategory ? `<div class="absolute right-4 top-3 w-32 text-center mb-3 px-3 py-1 rounded-full bg-black/20 text-white text-sm font-medium">${categories[state.currentCategory.split('+')[0]]?.icon || '💡'} ${getCategoryDisplayName(state.currentCategory)}</div>` : ''}
+                        <div class="text-center">${state.isGenerating ? `<div class="flex flex-col items-center gap-4"><div class="animate-spin w-8 h-8 border-4 border-white/30 border-t-white rounded-full"></div>
+                            <p class="text-white/80">🎲 Mescolando idee creative...</p>
+                            </div>` : `
+                                <div><p class="text-white text-xl font-medium leading-relaxed my-8 text-responsive">${state.currentIdea}</p>
+                                    <div class="flex justify-center gap-3 mt-6">
+                                     <!-- Pulsanti azione card -->
+                                     <div class="relative group">
+                                        <button onclick="toggleFavorite()" class="p-3 rounded-full transition-all transform hover:scale-110 ${isFavorite ? 'bg-red-500 text-white scale-110 animate-pulse-slow' : 'bg-white/20 text-white hover:bg-white/30'} text-3xl" title="${isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}">${isFavorite ? '❤️' : '🤍'}</button>
+                                        <div class="tooltip-card">
+                                            ${isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="relative group">
+                                        <button onclick="generateImage()" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110 text-3xl" title="Scarica come immagine">📥</button>
+                                        <div class="tooltip-card">
+                                            Scarica come immagine
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="relative group">
+                                        <button onclick="shareIdea()" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110 text-3xl" title="Condividi idea">📤</button>
+                                        <div class="tooltip-card">
+                                            Condividi idea
+                                        </div>
+                                    </div>
+                                    
+                                    </div>
+                                </div>
+    `}
+                        </div>
                     </div>
                 </div>
-                
-                <div>
-                    <label class="block text-md font-bold mb-2"><span class="italic">Livello Stranezza:</span> ${state.weirdnessLevel === 1 ? '😊 Normale' : state.weirdnessLevel === 2 ? '🤪 Strano' : '🦄 Bizzarro'}</label>
-                    <input type="range" min="1" max="3" value="${state.weirdnessLevel}" onchange="updateWeirdness(this.value)" class="w-full" list="weirdness-levels" />
-                    <datalist id="weirdness-levels">
-                        <option value="1" label="Normale"></option>
-                        <option value="2" label="Strano"></option>
-                        <option value="3" label="Bizzarro"></option>
-                    </datalist>
-                    <div class="flex justify-between text-xs mt-1 text-white/80">
-                        <span>😊 Normale</span>
-                        <span>🤪 Strano</span>
-                        <span>🦄 Bizzarro</span>
+    
+                <div class="px-4 mb-6"><button onclick="generateIdea()" ${state.isGenerating ? 'disabled' : ''} class="w-full py-4 bg-white text-gray-800 rounded-2xl font-bold lg:text-2xl text-xl shadow-lg hover:shadow-xl transform hover:scale-101 cursor-pointer transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">${state.isGenerating ? `<div class="animate-spin w-5 h-5 border-2 border-gray-400 border-t-gray-800 rounded-full"></div> Generando...` : `🎲 Genera Nuova Idea`}</button></div>
+    
+                <div class="px-4 pb-8">
+                    <div class="grid grid-cols-3 gap-5">${Object.entries(categories).slice(0, 3).map(([key, cat]: [string, any]) => `
+                        <button onclick="quickGenerate('${key}')" class="${cat.gradient} cursor-pointer p-3 rounded-xl text-white text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-102 transition-all"><span class="lg:text-2xl text-xl">${cat.icon} ${cat.name}</span> </button>`).join('')}
                     </div>
                 </div>
-            </div>
-            
-            
-            <div class="px-4 mb-4"><div class="grid grid-cols-2 gap-4">
-                <div class="button-semi-transparent " onclick="toggleFavorites()">
-                    <div class="text-2xl font-bold text-white">${state.favorites.length}</div>
-                    <div class="text-white/80 text-md font-bold">❤️ Preferiti</div>
-                </div>
-                
-                <div class="button-semi-transparent " onclick="toggleHistory()" style="animation-delay: 0.5s">
-                    <div class="text-2xl font-bold text-white">${state.history.length}</div>
-                        <div class="text-white/80 text-md font-bold">📚 Idee Generate</div>
+    
+                <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white">
+                    <div class="mb-4">
+                        <label class="block text-md italic font-bold mb-2">Seleziona Categorie:</label>
+                        <div class="grid grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
+                                <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
+                                <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-150" /><span class="lg:text-lg text:sm">${cat.icon} ${cat.name}</span></label>
+                            `).join('')}
+                        </div>
+                    </div>
+    
+                    <div>
+                        <label class="block text-md font-bold mb-2"><span class="italic">Livello Stranezza:</span> ${state.weirdnessLevel === 1 ? '😊 Normale' : state.weirdnessLevel === 2 ? '🤪 Strano' : '🦄 Bizzarro'}</label>
+                        <input type="range" min="1" max="3" value="${state.weirdnessLevel}" onchange="updateWeirdness(this.value)" class="w-full" list="weirdness-levels" />
+                        <datalist id="weirdness-levels">
+                            <option value="1" label="Normale"></option>
+                            <option value="2" label="Strano"></option>
+                            <option value="3" label="Bizzarro"></option>
+                        </datalist>
+                        <div class="flex justify-between text-xs mt-1 text-white/80">
+                            <span>😊 Normale</span>
+                            <span>🤪 Strano</span>
+                            <span>🦄 Bizzarro</span>
+                        </div>
                     </div>
                 </div>
+    
+    
+                <div class="px-4 mb-4"><div class="grid grid-cols-2 gap-4">
+                    <div class="button-semi-transparent " onclick="toggleFavorites()">
+                        <div class="text-2xl font-bold text-white">${state.favorites.length}</div>
+                        <div class="text-white/80 text-md font-bold">❤️ Preferiti</div>
+                    </div>
+    
+                    <div class="button-semi-transparent " onclick="toggleHistory()" style="animation-delay: 0.5s">
+                        <div class="text-2xl font-bold text-white">${state.history.length}</div>
+                            <div class="text-white/80 text-md font-bold">📚 Idee Generate</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="text-center text-white/60 text-xs pb-4">Made with ❤️ for creativity</div>
+                <div class="flex justify-center pb-10 animate-pulse-slow "><a href="https://ko-fi.com/G2G7JQ441"  target="_blank">
+                <img alt="Buy Me a Coffee at ko-fi.com" border="0" height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" class="w-48" /></a></div>
             </div>
             
-            <div class="text-center text-white/60 text-xs pb-4">Made with ❤️ for creativity</div>
-            <div class="flex justify-center pb-10 animate-pulse-slow "><a href="https://ko-fi.com/G2G7JQ441"  target="_blank">
-            <img alt="Buy Me a Coffee at ko-fi.com" border="0" height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" class="w-48" /></a></div>
         </div>
     `;
 }

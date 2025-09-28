@@ -37,12 +37,12 @@
   @apply bg-white/30 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/40 transition-all cursor-pointer
 }
 
-.tooltip{
-   @apply absolute left-1/2 top-3 translate-y-full -translate-x-1/2 mt-2 z-10 px-3 py-1 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
-}
+/*.tooltip{*/
+/*   @apply absolute left-1/2 top-3 translate-y-full -translate-x-1/2 mt-2 z-10 px-3 py-1 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none*/
+/*}*/
 
 .tooltip-card {
-    @apply absolute w-32 left-1/2 bottom-8 -translate-y-1/2 -translate-x-1/2 mt-2 z-10 px-3 py-1 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
+    @apply text-center absolute left-1/2 bottom-8 -translate-y-1/2 -translate-x-1/2 mt-2 z-10 px-3 py-1 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
 }
 
 @keyframes bounceIn {

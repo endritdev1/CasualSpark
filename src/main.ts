@@ -80,13 +80,13 @@ function toggleCategory(categoryKey: string): void {
         state.selectedCategories = ['creativo'];
     }
     saveToLocalStorage();
-    render();
+    // render();
 }
 
 function updateWeirdness(value: string): void {
     state.weirdnessLevel = parseInt(value);
     saveToLocalStorage();
-    render();
+    // render();
 }
 
 function quickGenerate(categoryKey: string): void {
@@ -323,41 +323,20 @@ function render(): void {
                 <div class="flex gap-2">
                     <!-- Pulsanti principali -->
                     <div class="relative group">
-                        <button onclick="toggleHistory()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl">📚</button>
-                        <div class="tooltip">
+                        <button onclick="toggleHistory()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl cursor-pointer">📚</button>
+                        <div class="tooltip-card">
                             Cronologia
                         </div>
                     </div>
                     <div class="relative group">
-                        <button onclick="toggleFavorites()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl">❤️</button>
-                        <div class="tooltip">
+                        <button onclick="toggleFavorites()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl cursor-pointer">❤️</button>
+                        <div class="tooltip-card">
                             Preferiti
                         </div>
                     </div>
-<!--                    <div class="relative group">-->
-<!--                        <button onclick="toggleSettings()" class="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all text-2xl">⚙️</button>-->
-<!--                        <div class="tooltip">-->
-<!--                            Impostazioni-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
             
-            ${state.showSettings ? `
-            <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white animate-pulse-slow"><h3 class="font-bold mb-3">⚙️ Impostazioni</h3>
-                <div class="mb-4">
-                    <label class="block text-sm mb-2">Categorie:</label>
-                    <div class="grid grid-cols-2 gap-2">${Object.entries(categories).map(([key, cat]) => `
-                            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded"><input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded w-6 h-6" />${cat.icon} ${cat.name}</label>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm mb-2">Livello Stranezza: ${state.weirdnessLevel === 1 ? '😊 Normale' : state.weirdnessLevel === 2 ? '🤪 Strano' : '🦄 Bizzarro'}</label>
-                    <input type="range" min="1" max="3" value="${state.weirdnessLevel}" onchange="updateWeirdness(this.value)" class="w-full" />
-                </div>
-            </div>` : ''}
             
             ${state.showHistory ? `
             <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white max-h-96 overflow-y-auto">
@@ -395,10 +374,6 @@ function render(): void {
                                     </div>
                                 </div>
                                 
-                                
-<!--                                    <button onclick="toggleFavorite()" class="p-3 rounded-full transition-all transform hover:scale-110 ${isFavorite ? 'bg-red-500 text-white scale-110 animate-pulse-slow' : 'bg-white/20 text-white hover:bg-white/30'}" title="${isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}">${isFavorite ? '❤️' : '🤍'}</button>-->
-<!--                                    <button onclick="generateImage()" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110" title="Scarica come immagine">📥</button>-->
-<!--                                    <button onclick="shareIdea()" class="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all transform hover:scale-110" title="Condividi idea">📤</button>-->
                                 </div>
                             </div>
 `}
@@ -406,22 +381,37 @@ function render(): void {
                 </div>
             </div>
                     
-            <div class="px-4 mb-6"><button onclick="generateIdea()" ${state.isGenerating ? 'disabled' : ''} class="w-full py-4 bg-white text-gray-800 rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">${state.isGenerating ? `<div class="animate-spin w-5 h-5 border-2 border-gray-400 border-t-gray-800 rounded-full"></div> Generando...` : `🎲 Genera Nuova Idea`}</button></div>
-                        <div class="px-4 pb-8"><div class="grid grid-cols-3 gap-3">${Object.entries(categories).slice(0, 3).map(([key, cat]: [string, any]) => `<button onclick="quickGenerate('${key}')" class="${cat.gradient} p-3 rounded-xl text-white text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"><span class="text-3xl">${cat.icon}</span> ${cat.name}</button>`).join('')}</div></div>
+            <div class="px-4 mb-6"><button onclick="generateIdea()" ${state.isGenerating ? 'disabled' : ''} class="w-full py-4 bg-white text-gray-800 rounded-2xl font-bold lg:text-2xl text-xl shadow-lg hover:shadow-xl transform hover:scale-101 cursor-pointer transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">${state.isGenerating ? `<div class="animate-spin w-5 h-5 border-2 border-gray-400 border-t-gray-800 rounded-full"></div> Generando...` : `🎲 Genera Nuova Idea`}</button></div>
+            
+            <div class="px-4 pb-8">
+                <div class="grid grid-cols-3 gap-5">${Object.entries(categories).slice(0, 3).map(([key, cat]: [string, any]) => `
+                    <button onclick="quickGenerate('${key}')" class="${cat.gradient} cursor-pointer p-3 rounded-xl text-white text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-102 transition-all"><span class="lg:text-2xl text-xl">${cat.icon} ${cat.name}</span> </button>`).join('')}
+                </div>
+            </div>
 
             <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white">
                 <div class="mb-4">
                     <label class="block text-md italic font-bold mb-2">Seleziona Categorie:</label>
-                    <div class="grid grid-cols-3 lg:grid-cols-6 gap-2">${Object.entries(categories).map(([key, cat]) => `
+                    <div class="grid grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
                             <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
-                            <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded" />${cat.icon} ${cat.name}</label>
+                            <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-200" /><span class="lg:text-xl text:sm">${cat.icon} ${cat.name}</span></label>
                         `).join('')}
                     </div>
                 </div>
                 
                 <div>
-                    <label class="block text-md italic font-bold mb-2">Livello Stranezza: ${state.weirdnessLevel === 1 ? '😊 Normale' : state.weirdnessLevel === 2 ? '🤪 Strano' : '🦄 Bizzarro'}</label>
-                    <input type="range" min="1" max="3" value="${state.weirdnessLevel}" onchange="updateWeirdness(this.value)" class="w-full" />
+                    <label class="block text-md font-bold mb-2"><span class="italic">Livello Stranezza:</span> ${state.weirdnessLevel === 1 ? '😊 Normale' : state.weirdnessLevel === 2 ? '🤪 Strano' : '🦄 Bizzarro'}</label>
+                    <input type="range" min="1" max="3" value="${state.weirdnessLevel}" onchange="updateWeirdness(this.value)" class="w-full" list="weirdness-levels" />
+                    <datalist id="weirdness-levels">
+                        <option value="1" label="Normale"></option>
+                        <option value="2" label="Strano"></option>
+                        <option value="3" label="Bizzarro"></option>
+                    </datalist>
+                    <div class="flex justify-between text-xs mt-1 text-white/80">
+                        <span>😊 Normale</span>
+                        <span>🤪 Strano</span>
+                        <span>🦄 Bizzarro</span>
+                    </div>
                 </div>
             </div>
             
@@ -440,7 +430,8 @@ function render(): void {
             </div>
             
             <div class="text-center text-white/60 text-xs pb-4">Made with ❤️ for creativity</div>
-            <div class="flex justify-center pb-10"><a href="https://ko-fi.com/G2G7JQ441" target="_blank"><img alt="Buy Me a Coffee at ko-fi.com" border="0" height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" style="border: 0px; height: 36px;" /></a></div>
+            <div class="flex justify-center pb-10 animate-pulse-slow "><a href="https://ko-fi.com/G2G7JQ441"  target="_blank">
+            <img alt="Buy Me a Coffee at ko-fi.com" border="0" height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" class="w-48" /></a></div>
         </div>
     `;
 }

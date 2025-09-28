@@ -86,7 +86,7 @@ function toggleCategory(categoryKey: string): void {
 function updateWeirdness(value: string): void {
     state.weirdnessLevel = parseInt(value);
     saveToLocalStorage();
-    // render();
+    render();
 }
 
 function quickGenerate(categoryKey: string): void {
@@ -229,6 +229,7 @@ function getCardGradient(categoryKey: string): string {
 }
 
 function generateIdea(): void {
+    console.log(state)
     state.isGenerating = true;
     render();
     setTimeout(() => {
@@ -394,7 +395,7 @@ function render(): void {
                     <label class="block text-md italic font-bold mb-2">Seleziona Categorie:</label>
                     <div class="grid grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
                             <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
-                            <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-200" /><span class="lg:text-xl text:sm">${cat.icon} ${cat.name}</span></label>
+                            <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-150" /><span class="lg:text-lg text:sm">${cat.icon} ${cat.name}</span></label>
                         `).join('')}
                     </div>
                 </div>

@@ -388,7 +388,7 @@ function render(): void {
     
                 <div class="px-4 pb-8">
                     <div class="grid grid-cols-3 gap-5">${Object.entries(categories).slice(0, 3).map(([key, cat]: [string, any]) => `
-                        <button onclick="quickGenerate('${key}')" class="${cat.gradient} cursor-pointer p-3 rounded-xl text-white text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-102 transition-all"><span class="lg:text-2xl text-xl">${cat.icon} ${cat.name}</span> </button>`).join('')}
+                        <button onclick="quickGenerate('${key}')" class="${cat.gradient} cursor-pointer p-3 rounded-xl text-white text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-102 transition-all"><span class="lg:text-2xl text-md">${cat.icon} ${cat.name}</span> </button>`).join('')}
                     </div>
                 </div>
     
@@ -397,7 +397,7 @@ function render(): void {
                         <label class="block text-md italic font-bold mb-2">Seleziona Categorie:</label>
                         <div class="grid grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
                                 <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
-                                <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-150" /><span class="lg:text-lg text:sm">${cat.icon} ${cat.name}</span></label>
+                                <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-150" /><span class="lg:text-lg text-sm">${cat.icon} ${cat.name}</span></label>
                             `).join('')}
                         </div>
                     </div>

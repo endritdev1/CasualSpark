@@ -395,7 +395,7 @@ function render(): void {
                 <div class="mx-4 mb-4 p-4 rounded-2xl bg-white/10 backdrop-blur-sm text-white">
                     <div class="mb-4">
                         <label class="block text-md italic font-bold mb-2">Seleziona Categorie:</label>
-                        <div class="grid grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
+                        <div class="grid grid-cols-2 lg:grid-cols-6 md:grid-cols-3 gap-2">${Object.entries(categories).map(([key, cat]) => `
                                 <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white/10 p-2 rounded">
                                 <input type="checkbox" ${state.selectedCategories.includes(key) ? 'checked' : ''} onchange="toggleCategory('${key}')" class="rounded scale-100 lg:scale-150" /><span class="lg:text-lg text-sm">${cat.icon} ${cat.name}</span></label>
                             `).join('')}
